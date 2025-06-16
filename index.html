@@ -1,40 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset = "UTF-8"/>
-        <title>Timer Task Board</title>
-        <style>
-            body{font-family : Arial,
-            sans-serif; margin:20px;}
-            label { display:block; margin:6px 0;}
-            #log li {margin: 3px 0; }
-            button {margin-top: 10px; }
-        </style>
-    </head>
-    <body>
-        <h2>Timer Task Board</h2>
+<html>
+<head>
+  <title>Task Scheduler</title>
+</head>
+<body>
 
-        <label>
-            Task Name:
-            <input id="taskname" type="text" placeholder="e.g. Drink Water" />
-        </label>
+  <h2>Task Scheduler</h2>
 
-        <label>
-            Delay (ms):
-            <input id="delay" type="number" placeholder="1000"/>
-        </label>
+  <form id="taskForm">
+    <label>Task Name: <input type="text" id="taskName" required></label><br><br>
+    <label>Delay (ms): <input type="number" id="delay" required></label><br><br>
+    <label>
+      <input type="checkbox" id="repeat">
+      Repeat?
+    </label><br><br>
+    <button type="submit">Start Task</button>
+  </form>
 
-        <label>
-            <input id="repeat" type="checkbox" />
-            Repeat?
-        </label>
+  <ul id="taskLog"></ul>
 
-        <button id="strtBtn">Start Task</button>
+  <button id="cancelAllBtn" style="display: none;">Cancel All Repeating Tasks</button>
 
-        <h3>Task Log</h3>
-        <ul id="log"></ul>
+  <script>
+    const form = document.getElementById('taskForm');
+    const log = document.getElementById('taskLog');
+    const cancelBtn = document.getElementById('cancelAllBtn');
+    const intervalIds = [];
 
-        <button id="cancelAllBtn">Cancel All Repeating Tasks</button>
-        <script src="script.js"></script>
-    </body>
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toTimeString().split(' ')[0]; 
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('taskName').value;
+      const delay = parseInt(document.getElementById('delay').value);
+      const repeat = document.getElementById('repeat').checked;
+
+      function executeTask() {
+        const li = document.createElement('li');
+        li.textContent = ` Task "${name}" executed at ${getCurrentTime()}`;
+        log.appendChild(li);
+      }
+
+      if (repeat) {
+        const intervalId = setInterval(executeTask, delay);
+        intervalIds.push(intervalId);
+        cancelBtn.style.display = 'inline';
+      } else {
+        setTimeout(executeTask, delay);
+      }
+
+      form.reset();
+    });
+
+    cancelBtn.addEventListener('click', function() {
+      intervalIds.forEach(id => clearInterval(id));
+      intervalIds.length = 0;
+      cancelBtn.style.display = 'none';
+
+      const li = document.createElement('li');
+      li.textContent = 'All repeating tasks cancelled';
+      log.appendChild(li);
+    });
+  </script>
+
+</body>
 </html>
