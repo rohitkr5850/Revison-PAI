@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <title>Timer Task Board</title>
+        <style>
+            body{font-family : Arial,
+            sans-serif; margin:20px;}
+            label { display:block; margin:6px 0;}
+            #log li {margin: 3px 0; }
+            button {margin-top: 10px; }
+        </style>
+    </head>
+    <body>
+        <h2>Timer Task Board</h2>
+
+        <label>
+            Task Name:
+            <input id="taskname" type="text" placeholder="e.g. Drink Water" />
+        </label>
+
+        <label>
+            Delay (ms):
+            <input id="delay" type="number" placeholder="1000"/>
+        </label>
+
+        <label>
+            <input id="repeat" type="checkbox" />
+            Repeat?
+        </label>
+
+        <button id="strtBtn">Start Task</button>
+
+        <h3>Task Log</h3>
+        <ul id="log"></ul>
+
+        <button id="cancelAllBtn">Cancel All Repeating Tasks</button>
+        <script src="script.js"></script>
+    </body>
+</html>
